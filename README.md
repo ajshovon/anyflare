@@ -14,7 +14,7 @@ Anyflare is a cloudflare worker proxy which you can deploy yourself to download 
 
 ### Easily deploy with Cloudflare Worker
 
-[![Deploy with Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/ajshovon/anyflare)
+[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/ajshovon/anyflare)
 
 ### Manual Deploy
 
