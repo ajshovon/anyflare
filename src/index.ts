@@ -118,12 +118,23 @@ async function handleRequest(event: FetchEvent): Promise<Response> {
           </div>
         </section>
 
-        <section class="gradient-bg text-white rounded-xl p-12 text-center">
-          <h2 class="text-4xl font-bold mb-6">Ready to Deploy?</h2>
-          <p class="mb-8 text-lg">Get started with Anyflare on your Cloudflare Workers account today.</p>
-          <a href="https://developers.cloudflare.com/workers/get-started/guide/" target="_blank" rel="noopener noreferrer" class="bg-white text-primary font-bold py-3 px-8 rounded-lg hover:bg-gray-100 transition-colors inline-flex items-center text-lg">
-            <i class="ri-rocket-line mr-2"></i> Deploy to Cloudflare Workers
-          </a>
+        <section class="gradient-bg text-white rounded-xl p-8 md:p-12 text-center max-w-4xl mx-auto">
+          <h2 class="text-3xl md:text-4xl font-bold mb-4 md:mb-6">Ready to Deploy?</h2>
+          <p class="mb-6 md:mb-8 text-base md:text-lg">Get started with Anyflare on your Cloudflare Workers account today.</p>
+          <div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4">
+            <a href="https://github.com/ajshovon/anyflare" target="_blank" rel="noopener noreferrer" class="bg-white text-primary py-3 px-6 rounded-lg hover:bg-gray-100 transition-colors inline-flex items-center font-bold w-full sm:w-auto justify-center">
+              <i class="ri-github-line mr-2 sm:mr-0"></i>
+              <span class="sm:hidden">Fork on GitHub</span>
+            </a>
+            <a
+              href="https://deploy.workers.cloudflare.com/?url=https://github.com/ajshovon/anyflare"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="bg-white text-primary font-bold py-3 px-6 rounded-lg hover:bg-gray-100 transition-colors inline-flex items-center text-base md:text-lg w-full sm:w-auto justify-center"
+            >
+              <i class="ri-rocket-line mr-2"></i> Deploy to Cloudflare Workers
+            </a>
+          </div>
         </section>
       </main>
 
@@ -202,8 +213,7 @@ async function handleRequest(event: FetchEvent): Promise<Response> {
       });
     </script>
   </body>
-</html>
-`,
+</html>`,
       {
         headers: { "Content-Type": "text/html" },
       }
