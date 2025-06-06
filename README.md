@@ -4,6 +4,10 @@
 
 Anyflare is a cloudflare worker proxy which you can deploy yourself to download anything through cloudflare.
 
+## Preview
+
+![Anyflare Preview Image](docs/assets/preview.png "Anyflare")
+
 ## Features
 
 - **Increase Speed**: Increase your slow download speed with Cloudflare CDN
