@@ -5,7 +5,7 @@
     "deploy": "wrangler deploy --minify"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20241112.0",
-    "wrangler": "^3.90.0"
+    "@cloudflare/workers-types": "^4.20250606.0",
+    "wrangler": "^4.19.1"
   }
 }

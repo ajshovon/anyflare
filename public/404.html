@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 – Not Found | Anyflare</title>
+    <link rel="icon" type="image/svg+xml" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path fill="%233B82F6" d="M13 13v5.585l1.828-1.828 1.415 1.415L12 22.414l-4.243-4.242 1.415-1.415L11 18.585V13h2zM12 2a7.001 7.001 0 0 1 6.954 6.194 5.5 5.5 0 0 1-.953 10.784v-2.014a3.5 3.5 0 1 0-1.112-6.91 5 5 0 1 0-9.777 0 3.5 3.5 0 0 0-1.292 6.88l.18.03v2.014a5.5 5.5 0 0 1-.954-10.784A7 7 0 0 1 12 2z"/></g></svg>' />
+    <style>
+        /* ... Copy all CSS from your main page here ... */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+            background: #0a0a0a;
+            color: #e5e5e5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.6;
+        }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 20px; }
+        header {
+            border-bottom: 1px solid #1a1a1a;
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #3b82f6;
+        }
+        .logo svg { width: 20px; height: 20px; }
+        .nav { display: flex; gap: 24px; align-items: center; }
+        .nav a {
+            color: #888;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .nav a:hover { color: #e5e5e5; }
+        .theme-toggle {
+            background: none;
+            border: 1px solid #333;
+            color: #888;
+            padding: 6px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        .theme-toggle:hover { border-color: #555; color: #e5e5e5; }
+        main { flex: 1; padding: 60px 0; }
+        .centered-404 {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 60vh;
+            text-align: center;
+        }
+        .centered-404 h1 {
+            font-size: 64px;
+            font-weight: 900;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .centered-404 p {
+            color: #888;
+            font-size: 18px;
+            margin-bottom: 32px;
+        }
+        .centered-404 .home-btn {
+            background: #3b82f6;
+            border: none;
+            color: white;
+            padding: 12px 32px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .centered-404 .home-btn:hover { background: #2563eb; }
+        footer {
+            border-top: 1px solid #1a1a1a;
+            padding: 20px 0;
+            text-align: center;
+            color: #555;
+            font-size: 12px;
+        }
+        footer a { color: #3b82f6; text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+        .light { background: #ffffff; color: #1a1a1a; }
+        .light header { background: rgba(255,255,255,0.95); border-bottom-color: #e5e5e5; }
+        .light .logo { color: #3b82f6; }
+        .light .nav a { color: #666; }
+        .light .nav a:hover { color: #1a1a1a; }
+        .light .theme-toggle { border-color: #e5e5e5; color: #666; }
+        .light .theme-toggle:hover { border-color: #ccc; color: #1a1a1a; }
+        .light .centered-404 p { color: #666; }
+        .light .centered-404 .home-btn { background: #3b82f6; color: #fff; }
+        .light .centered-404 .home-btn:hover { background: #2563eb; }
+        .light footer { border-top-color: #e5e5e5; color: #999; }
+        @media (max-width: 768px) {
+            .container { padding: 0 16px; }
+            .centered-404 h1 { font-size: 40px; }
+            .nav { gap: 16px; }
+            .nav a { font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M13 13v5.585l1.828-1.828 1.415 1.415L12 22.414l-4.243-4.242 1.415-1.415L11 18.585V13h2zM12 2a7.001 7.001 0 0 1 6.954 6.194 5.5 5.5 0 0 1-.953 10.784v-2.014a3.5 3.5 0 1 0-1.112-6.91 5 5 0 1 0-9.777 0 3.5 3.5 0 0 0-1.292 6.88l.18.03v2.014a5.5 5.5 0 0 1-.954-10.784A7 7 0 0 1 12 2z"/>
+                    </svg>
+                    anyflare
+                </div>
+                <nav class="nav">
+                    <a href="/">home</a>
+                    <a href="/#faq">faq</a>
+                    <a href="/#deploy">deploy</a>
+                    <a href="https://github.com/ajshovon/anyflare" target="_blank">github</a>
+                    <button class="theme-toggle" id="themeToggle">◐</button>
+                </nav>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <div class="centered-404">
+                <h1>404</h1>
+                <p>the page you’re looking for doesn’t exist.<br>maybe it was moved or never existed.</p>
+                <a href="/" class="home-btn">go home</a>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <div class="container">
+            <p>made with ❤️ by <a href="https://shovon.me" target="_blank">[.shovon]</a> • powered by cloudflare workers</p>
+        </div>
+    </footer>
+    <script>
+        // Theme management (same as main page)
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        function setTheme(theme) {
+            if (theme === 'light') {
+                body.classList.add('light');
+                themeToggle.textContent = '◑';
+            } else {
+                body.classList.remove('light');
+                themeToggle.textContent = '◐';
+            }
+            localStorage.setItem('theme', theme);
+        }
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        setTheme(savedTheme || (prefersDark ? 'dark' : 'light'));
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.classList.contains('light') ? 'light' : 'dark';
+            setTheme(currentTheme === 'light' ? 'dark' : 'light');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anyflare - Download Accelerator</title>
+    <link rel="icon" type="image/svg+xml" href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path fill="none" d="M0 0h24v24H0z"/><path fill="%233B82F6" d="M13 13v5.585l1.828-1.828 1.415 1.415L12 22.414l-4.243-4.242 1.415-1.415L11 18.585V13h2zM12 2a7.001 7.001 0 0 1 6.954 6.194 5.5 5.5 0 0 1-.953 10.784v-2.014a3.5 3.5 0 1 0-1.112-6.91 5 5 0 1 0-9.777 0 3.5 3.5 0 0 0-1.292 6.88l.18.03v2.014a5.5 5.5 0 0 1-.954-10.784A7 7 0 0 1 12 2z"/></g></svg>' />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+            background: #0a0a0a;
+            color: #e5e5e5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            border-bottom: 1px solid #1a1a1a;
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #3b82f6;
+        }
+
+        .logo svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .nav {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .nav a {
+            color: #888;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .nav a:hover {
+            color: #e5e5e5;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 1px solid #333;
+            color: #888;
+            padding: 6px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .theme-toggle:hover {
+            border-color: #555;
+            color: #e5e5e5;
+        }
+
+        main {
+            flex: 1;
+            padding: 60px 0;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            color: #888;
+            font-size: 16px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .download-section {
+            background: #111;
+            border: 1px solid #1a1a1a;
+            border-radius: 8px;
+            padding: 32px;
+            margin-bottom: 60px;
+        }
+
+        .download-form {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .url-input-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
+        .url-input {
+            width: 100%;
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 12px 16px;
+            color: #e5e5e5;
+            font-family: inherit;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        .url-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        .url-input::placeholder {
+            color: #555;
+        }
+
+        .copy-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #555;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: color 0.2s;
+            display: none;
+        }
+
+        .copy-btn:hover {
+            color: #3b82f6;
+        }
+
+        .copy-btn.show {
+            display: block;
+        }
+
+        .download-btn {
+            background: #3b82f6;
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+
+        .download-btn:hover {
+            background: #2563eb;
+        }
+
+        .features {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .feature-tag {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #888;
+        }
+
+        .faq-section {
+            background: #111;
+            border: 1px solid #1a1a1a;
+            border-radius: 8px;
+            padding: 32px;
+            margin-bottom: 60px;
+        }
+
+        .faq-section h2 {
+            font-size: 20px;
+            margin-bottom: 24px;
+            color: #e5e5e5;
+            text-align: center;
+        }
+
+        .faq-item {
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        .faq-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .faq-question {
+            font-size: 16px;
+            font-weight: 600;
+            color: #3b82f6;
+            margin-bottom: 8px;
+        }
+
+        .faq-answer {
+            color: #888;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .faq-answer a {
+            color: #3b82f6;
+            text-decoration: none;
+        }
+
+        .faq-answer a:hover {
+            text-decoration: underline;
+        }
+
+        .faq-answer code {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 12px;
+            color: #e5e5e5;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 20px;
+            background: #111;
+            border: 1px solid #1a1a1a;
+            border-radius: 8px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #3b82f6;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .deploy-section {
+            background: linear-gradient(135deg, #1a1a1a, #111);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 32px;
+            text-align: center;
+        }
+
+        .deploy-section h2 {
+            font-size: 20px;
+            margin-bottom: 12px;
+            color: #e5e5e5;
+        }
+
+        .deploy-section p {
+            color: #888;
+            margin-bottom: 24px;
+        }
+
+        .deploy-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .deploy-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            border: 1px solid #333;
+        }
+
+        .deploy-btn.primary {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        .deploy-btn.primary:hover {
+            background: #2563eb;
+            border-color: #2563eb;
+        }
+
+        .deploy-btn.secondary {
+            background: #1a1a1a;
+            color: #e5e5e5;
+        }
+
+        .deploy-btn.secondary:hover {
+            background: #333;
+        }
+
+        footer {
+            border-top: 1px solid #1a1a1a;
+            padding: 20px 0;
+            text-align: center;
+            color: #555;
+            font-size: 12px;
+        }
+
+        footer a {
+            color: #3b82f6;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #e5e5e5;
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .light {
+            background: #ffffff;
+            color: #1a1a1a;
+        }
+
+        .light header {
+            background: rgba(255, 255, 255, 0.95);
+            border-bottom-color: #e5e5e5;
+        }
+
+        .light .logo {
+            color: #3b82f6;
+        }
+
+        .light .nav a {
+            color: #666;
+        }
+
+        .light .nav a:hover {
+            color: #1a1a1a;
+        }
+
+        .light .theme-toggle {
+            border-color: #e5e5e5;
+            color: #666;
+        }
+
+        .light .theme-toggle:hover {
+            border-color: #ccc;
+            color: #1a1a1a;
+        }
+
+        .light .hero p {
+            color: #666;
+        }
+
+        .light .download-section {
+            background: #f8f9fa;
+            border-color: #e5e5e5;
+        }
+
+        .light .url-input {
+            background: #ffffff;
+            border-color: #e5e5e5;
+            color: #1a1a1a;
+        }
+
+        .light .url-input:focus {
+            border-color: #3b82f6;
+        }
+
+        .light .url-input::placeholder {
+            color: #999;
+        }
+
+        .light .copy-btn {
+            color: #999;
+        }
+
+        .light .copy-btn:hover {
+            color: #3b82f6;
+        }
+
+        .light .feature-tag {
+            background: #ffffff;
+            border-color: #e5e5e5;
+            color: #666;
+        }
+
+        .light .faq-section {
+            background: #f8f9fa;
+            border-color: #e5e5e5;
+        }
+
+        .light .faq-item {
+            border-bottom-color: #e5e5e5;
+        }
+
+        .light .faq-question {
+            color: #3b82f6;
+        }
+
+        .light .faq-answer {
+            color: #666;
+        }
+
+        .light .faq-answer code {
+            background: #ffffff;
+            border-color: #e5e5e5;
+            color: #1a1a1a;
+        }
+
+        .light .stat {
+            background: #f8f9fa;
+            border-color: #e5e5e5;
+        }
+
+        .light .stat-label {
+            color: #666;
+        }
+
+        .light .deploy-section {
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            border-color: #e5e5e5;
+        }
+
+        .light .deploy-section h2 {
+            color: #1a1a1a;
+        }
+
+        .light .deploy-section p {
+            color: #666;
+        }
+
+        .light .deploy-btn.secondary {
+            background: #ffffff;
+            color: #1a1a1a;
+            border-color: #e5e5e5;
+        }
+
+        .light .deploy-btn.secondary:hover {
+            background: #f8f9fa;
+        }
+
+        .light footer {
+            border-top-color: #e5e5e5;
+            color: #999;
+        }
+
+        .light .toast {
+            background: #ffffff;
+            border-color: #e5e5e5;
+            color: #1a1a1a;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 16px;
+            }
+
+            .hero h1 {
+                font-size: 24px;
+            }
+
+            .download-form {
+                flex-direction: column;
+            }
+
+            .deploy-buttons {
+                flex-direction: column;
+            }
+
+            .nav {
+                gap: 16px;
+            }
+
+            .nav a {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M13 13v5.585l1.828-1.828 1.415 1.415L12 22.414l-4.243-4.242 1.415-1.415L11 18.585V13h2zM12 2a7.001 7.001 0 0 1 6.954 6.194 5.5 5.5 0 0 1-.953 10.784v-2.014a3.5 3.5 0 1 0-1.112-6.91 5 5 0 1 0-9.777 0 3.5 3.5 0 0 0-1.292 6.88l.18.03v2.014a5.5 5.5 0 0 1-.954-10.784A7 7 0 0 1 12 2z"/>
+                    </svg>
+                    anyflare
+                </div>
+                <nav class="nav">
+                    <a href="#faq">faq</a>
+                    <a href="#deploy">deploy</a>
+                    <a href="https://github.com/ajshovon/anyflare" target="_blank">github</a>
+                    <button class="theme-toggle" id="themeToggle">◐</button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="hero">
+                <h1>accelerate your downloads</h1>
+                <p>self-deployed download accelerator powered by cloudflare workers</p>
+            </div>
+
+            <div class="download-section">
+                <form class="download-form" id="downloadForm">
+                    <div class="url-input-wrapper">
+                        <input 
+                            type="url" 
+                            class="url-input" 
+                            id="urlInput"
+                            placeholder="https://example.com/file.zip"
+                            required
+                        >
+                        <button type="button" class="copy-btn" id="copyBtn" title="copy anyflare url">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <button type="submit" class="download-btn">download</button>
+                </form>
+
+                <div class="features">
+                    <span class="feature-tag">unlimited downloads</span>
+                    <span class="feature-tag">global cdn</span>
+                    <span class="feature-tag">bypass restrictions</span>
+                    <span class="feature-tag">self-hosted</span>
+                </div>
+            </div>
+
+            <div class="faq-section" id="faq">
+                <h2>frequently asked questions</h2>
+                
+                <div class="faq-item">
+                    <div class="faq-question">what is anyflare?</div>
+                    <div class="faq-answer">
+                        anyflare is a self-deployed download accelerator that runs on cloudflare workers. it acts as a proxy to speed up downloads, bypass regional restrictions, and provide a more reliable download experience through cloudflare's global edge network.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">how does it work?</div>
+                    <div class="faq-answer">
+                        when you enter a download url, anyflare creates a proxy link like <code>your-domain.com/proxy/original-url</code>. the cloudflare worker fetches the file from the original source and streams it to you through cloudflare's optimized network, potentially improving speed and reliability. It works on almost all hosts.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">is it free to use?</div>
+                    <div class="faq-answer">
+                        anyflare itself is open source and free. however, you need to deploy it on your own cloudflare workers account. cloudflare workers has a generous free tier (100,000 requests/day), but heavy usage may incur costs based on cloudflare's pricing.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">what file types are supported?</div>
+                    <div class="faq-answer">
+                        anyflare can proxy any file type - videos, archives, documents, software, etc. there are no restrictions on file types, only cloudflare workers' limits on request size and duration apply.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">having issues or need help?</div>
+                    <div class="faq-answer">
+                        for bugs, feature requests, or deployment help, please <a href="https://github.com/ajshovon/anyflare/issues" target="_blank">open an issue on github</a>.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">is my data safe?</div>
+                    <div class="faq-answer">
+                        since you deploy anyflare on your own cloudflare account, you have full control over your instance. no data is stored permanently - files are streamed through the worker without being saved. always deploy from the official <a href="https://github.com/ajshovon/anyflare" target="_blank">github repository</a>.
+                    </div>
+                </div>
+            </div>
+
+            <div class="deploy-section" id="deploy">
+                <h2>deploy your own instance</h2>
+                <p>get started with anyflare on cloudflare workers in under 2 minutes</p>
+                <div class="deploy-buttons">
+                    <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/ajshovon/anyflare" 
+                       target="_blank" 
+                       class="deploy-btn primary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        deploy now
+                    </a>
+                    <a href="https://github.com/ajshovon/anyflare" 
+                       target="_blank" 
+                       class="deploy-btn secondary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                        view source
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>made with ❤️ by <a href="https://shovon.me" target="_blank">[.shovon]</a> • powered by cloudflare workers</p>
+        </div>
+    </footer>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Theme management
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        
+        function setTheme(theme) {
+            if (theme === 'light') {
+                body.classList.add('light');
+                themeToggle.textContent = '◑';
+            } else {
+                body.classList.remove('light');
+                themeToggle.textContent = '◐';
+            }
+            localStorage.setItem('theme', theme);
+        }
+
+        // Initialize theme
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        setTheme(savedTheme || (prefersDark ? 'dark' : 'light'));
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.classList.contains('light') ? 'light' : 'dark';
+            setTheme(currentTheme === 'light' ? 'dark' : 'light');
+        });
+
+        // Download functionality
+        const downloadForm = document.getElementById('downloadForm');
+        const urlInput = document.getElementById('urlInput');
+        const copyBtn = document.getElementById('copyBtn');
+        const toast = document.getElementById('toast');
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        function updateCopyButton() {
+            if (urlInput.value.trim()) {
+                copyBtn.classList.add('show');
+            } else {
+                copyBtn.classList.remove('show');
+            }
+        }
+
+        urlInput.addEventListener('input', updateCopyButton);
+
+        copyBtn.addEventListener('click', async () => {
+            const url = urlInput.value.trim();
+            if (url) {
+                const anyflareUrl = `${window.location.origin}/proxy/${url}`;
+                try {
+                    await navigator.clipboard.writeText(anyflareUrl);
+                    copyBtn.innerHTML = `
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20,6 9,17 4,12"></polyline>
+                        </svg>
+                    `;
+                    showToast('anyflare url copied to clipboard');
+                    setTimeout(() => {
+                        copyBtn.innerHTML = `
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                        `;
+                    }, 2000);
+                } catch (err) {
+                    showToast('failed to copy url');
+                }
+            }
+        });
+
+        downloadForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const url = urlInput.value.trim();
+            if (url) {
+                window.location.href = `/proxy/${url}`;
+            }
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Ctrl/Cmd + K to focus input
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                urlInput.focus();
+                urlInput.select();
+            }
+            
+            // Escape to clear input
+            if (e.key === 'Escape' && document.activeElement === urlInput) {
+                urlInput.value = '';
+                updateCopyButton();
+                urlInput.blur();
+            }
+        });
+
+        // Add subtle parallax effect to hero
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero');
+            if (hero) {
+                hero.style.transform = `translateY(${scrolled * 0.1}px)`;
+            }
+        });
+    </script>
+</body>
+</html>
